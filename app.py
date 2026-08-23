@@ -52,7 +52,7 @@ DELHI_LOCATIONS = {
     "Gurugram Cyber City": {"lat": 28.4950, "lon": 77.0895}
 }
 
-# 5-Page Sidebar Navigation
+# 6-Page Sidebar Navigation
 st.sidebar.title("🌱 Navigation Menu")
 page = st.sidebar.radio(
     "Select a Page",
@@ -60,8 +60,9 @@ page = st.sidebar.radio(
         "1. Home & Overview",
         "2. AI Kitchen Assistant",
         "3. Community Food Board & Map",
-        "4. Food Storage Guide",
-        "5. Local NGO Directory"
+        "4. Food Delivery & Pickup System",
+        "5. Food Storage Guide",
+        "6. Local NGO Directory"
     ]
 )
 
@@ -85,8 +86,8 @@ if page == "1. Home & Overview":
     ### What you can do here:
     * **🤖 AI Kitchen Assistant:** Upload pictures of random ingredients or fridge leftovers to instantly generate recipes and shelf-life extension tricks.
     * **🤝 Community Food Board:** List excess food from events, restaurants, or households, and locate surplus meals on our interactive Delhi map.
-    * **🧊 Storage Guide:** Learn how to properly freeze, wrap, and preserve perishable items.
-    * **🤝 NGO Directory:** Discover local organizations helping distribute meals across the capital region.
+    * **🚴 Delivery System:** Register as a volunteer delivery agent to claim pickup tasks and bridge the gap between donors and receivers.
+    * **🧊 Storage Guide & 🤝 NGOs:** Learn proper food preservation and connect with local organizations.
     """)
 
 # ==========================================
@@ -154,6 +155,7 @@ elif page == "3. Community Food Board & Map":
                     "contact": contact,
                     "lat": coords["lat"],
                     "lon": coords["lon"],
+                    "status": "Available for Pickup",
                     "timestamp": firestore.SERVER_TIMESTAMP if db else None
                 }
                 
@@ -196,19 +198,66 @@ elif page == "3. Community Food Board & Map":
     st.subheader("📋 Available Food Listings")
     
     if db and listings_data:
-        for data in listings_data:
+        for doc_id, data in enumerate(listings_data):
             with st.container(border=True):
                 st.markdown(f"**Item:** {data.get('food_item', 'N/A')}")
                 st.write(f"**Quantity:** {data.get('quantity', 'N/A')}")
                 st.write(f"**Location / Hub:** {data.get('location', 'N/A')}")
                 st.write(f"**Contact:** {data.get('contact', 'N/A')}")
+                st.write(f"**Status:** {data.get('status', 'Available for Pickup')}")
     else:
         st.write("Browse active pickup points from the map above or post a listing to get started.")
 
 # ==========================================
-# PAGE 4: FOOD STORAGE GUIDE
+# PAGE 4: FOOD DELIVERY & PICKUP SYSTEM
 # ==========================================
-elif page == "4. Food Storage Guide":
+elif page == "4. Food Delivery & Pickup System":
+    st.title("🚴 Food Delivery & Volunteer Pickup System")
+    st.write("Are you a volunteer or delivery agent? Sign up below to claim active surplus food pickups and help deliver meals to communities or shelters.")
+
+    with st.form("volunteer_signup_form"):
+        st.subheader("Volunteer / Delivery Agent Registration")
+        vol_name = st.text_input("Full Name")
+        vol_phone = st.text_input("Phone Number")
+        vol_vehicle = st.selectbox("Mode of Transport", ["Bicycle", "Two-Wheeler / Scooter", "Car / Auto", "Walking"])
+        preferred_zone = st.selectbox("Preferred Area for Pickup", list(DELHI_LOCATIONS.keys()))
+        
+        reg_submitted = st.form_submit_button("Register as Volunteer")
+        if reg_submitted:
+            if vol_name and vol_phone:
+                st.success(f"Thank you {vol_name}! You are now registered as a volunteer for {preferred_zone} using a {vol_vehicle}.")
+            else:
+                st.warning("Please provide your name and phone number.")
+
+    st.divider()
+    st.subheader("📦 Active Deliveries & Pickup Queue")
+    st.write("Claim available surplus batches below to manage transport logistics:")
+
+    if db:
+        try:
+            docs = db.collection("surplus_food").stream()
+            delivery_tasks = list(docs)
+            if not delivery_tasks:
+                st.info("No active delivery tasks available right now.")
+            for doc in delivery_tasks:
+                data = doc.to_dict()
+                with st.container(border=True):
+                    st.markdown(f"**Surplus Item:** {data.get('food_item', 'N/A')}")
+                    st.write(f"**Quantity:** {data.get('quantity', 'N/A')}")
+                    st.write(f"**Pickup Hub:** {data.get('location', 'N/A')}")
+                    st.write(f"**Donor Contact:** {data.get('contact', 'N/A')}")
+                    
+                    if st.button(f"Accept Delivery Task ({data.get('food_item', 'Item')})", key=doc.id):
+                        st.success(f"Task accepted! Please head to {data.get('location', 'the pickup location')} to collect and deliver the food.")
+        except Exception as e:
+            st.warning("Could not load delivery tasks from the database.")
+    else:
+        st.info("Connect Firebase credentials to view live dynamic delivery tasks.")
+
+# ==========================================
+# PAGE 5: FOOD STORAGE GUIDE
+# ==========================================
+elif page == "5. Food Storage Guide":
     st.title("🧊 Food Preservation & Storage Guide")
     st.write("Proper storage is the first line of defense against food waste. Explore these pro-tips to maximize freshness:")
 
@@ -237,9 +286,9 @@ elif page == "4. Food Storage Guide":
         """)
 
 # ==========================================
-# PAGE 5: LOCAL NGO DIRECTORY
+# PAGE 6: LOCAL NGO DIRECTORY
 # ==========================================
-elif page == "5. Local NGO Directory":
+elif page == "6. Local NGO Directory":
     st.title("🤝 Local Food Rescue Directory (Delhi NCR)")
     st.write("Partner with or donate surplus food directly to established organizations operating across Delhi:")
 
