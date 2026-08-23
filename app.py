@@ -112,7 +112,7 @@ if view_mode == "Restaurant / Donor":
                         
                         if ai_client:
                             response = ai_client.models.generate_content(
-                                model='gemini-2.5-flash',
+                                model='gemini-3.6-flash',
                                 contents=[
                                     types.Part.from_bytes(data=image_bytes, mime_type=uploaded_image.type),
                                     "Analyze this surplus food image. Provide: 1. Detected food items, 2. Estimated number of portions, 3. Food category (Cooked/Perishable vs Dry), 4. Priority level (High/Medium/Low)."
