@@ -41,7 +41,7 @@ def init_gemini():
 
 client = init_gemini()
 
-# Predefined Delhi coordinates for easy mapping
+# Predefined real-life Delhi NCR coordinates for mapping
 DELHI_LOCATIONS = {
     "Connaught Place (Central Delhi)": {"lat": 28.6280, "lon": 77.2090},
     "South Extension (South Delhi)": {"lat": 28.5700, "lon": 77.2219},
