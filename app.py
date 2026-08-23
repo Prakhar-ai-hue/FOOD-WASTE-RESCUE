@@ -41,7 +41,7 @@ def init_gemini():
 
 client = init_gemini()
 
-# Predefined real-life Delhi NCR coordinates for mapping
+# Predefined Delhi NCR coordinates for mapping
 DELHI_LOCATIONS = {
     "Connaught Place (Central Delhi)": {"lat": 28.6280, "lon": 77.2090},
     "South Extension (South Delhi)": {"lat": 28.5700, "lon": 77.2219},
@@ -52,12 +52,48 @@ DELHI_LOCATIONS = {
     "Gurugram Cyber City": {"lat": 28.4950, "lon": 77.0895}
 }
 
-# Sidebar Navigation
-st.sidebar.title("Navigation")
-app_mode = st.sidebar.radio("Choose a section", ["AI Recipe & Waste Scanner", "Community Food Board & Map"])
+# 5-Page Sidebar Navigation
+st.sidebar.title("🌱 Navigation Menu")
+page = st.sidebar.radio(
+    "Select a Page",
+    [
+        "1. Home & Overview",
+        "2. AI Kitchen Assistant",
+        "3. Community Food Board & Map",
+        "4. Food Storage Guide",
+        "5. Local NGO Directory"
+    ]
+)
 
-if app_mode == "AI Recipe & Waste Scanner":
-    st.title("🥗 Food Waste Rescue: AI Kitchen Assistant")
+# ==========================================
+# PAGE 1: HOME & OVERVIEW
+# ==========================================
+if page == "1. Home & Overview":
+    st.title("🥗 Welcome to Food Waste Rescue Hub")
+    st.markdown("### Turning kitchen surplus and food waste into community meals and sustainable solutions.")
+    
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        st.metric(label="Global Food Waste Reduction", value="Target 50%", delta="SDG 12.3")
+    with col2:
+        st.metric(label="Active Hubs in Delhi NCR", value=len(DELHI_LOCATIONS), delta="Live")
+    with col3:
+        st.metric(label="AI Powered Analysis", value="Instant", delta="Gemini 3.6")
+
+    st.divider()
+    st.markdown("""
+    ### What you can do here:
+    * **🤖 AI Kitchen Assistant:** Upload pictures of random ingredients or fridge leftovers to instantly generate recipes and shelf-life extension tricks.
+    * **🤝 Community Food Board:** List excess food from events, restaurants, or households, and locate surplus meals on our interactive Delhi map.
+    * **🧊 Storage Guide:** Learn how to properly freeze, wrap, and preserve perishable items.
+    * **🤝 NGO Directory:** Discover local organizations helping distribute meals across the capital region.
+    """)
+
+# ==========================================
+# PAGE 2: AI KITCHEN ASSISTANT
+# ==========================================
+elif page == "2. AI Kitchen Assistant":
+    st.title("🤖 AI Kitchen & Waste Scanner")
     st.write("Upload an image of your leftover ingredients or food items to instantly generate sustainable recipes, storage tricks, and waste-reduction solutions.")
 
     if client is None:
@@ -92,16 +128,17 @@ if app_mode == "AI Recipe & Waste Scanner":
                     except Exception as e:
                         st.error(f"Error during AI analysis: {e}")
 
-elif app_mode == "Community Food Board & Map":
-    st.title("🤝 Community Food Rescue Board & Live Map")
+# ==========================================
+# PAGE 3: COMMUNITY FOOD BOARD & MAP
+# ==========================================
+elif page == "3. Community Food Board & Map":
+    st.title("🗺️ Community Food Board & Live Delhi Map")
     st.write("Share surplus food with your local community or browse real-life pickup locations on the map below to help rescue food from going to waste.")
 
-    # Form to list surplus food with real-life area selection
     with st.form("food_listing_form"):
         st.subheader("List Surplus Food for Rescue")
         food_item = st.text_input("Food Item / Description (e.g., 10 boxes of fresh sandwiches)")
         quantity = st.text_input("Quantity / Servings (e.g., 15 servings)")
-        
         selected_area = st.selectbox("Select Area / Pickup Hub", list(DELHI_LOCATIONS.keys()))
         contact = st.text_input("Contact Info (Phone / Email / Organization Name)")
         
@@ -127,14 +164,13 @@ elif app_mode == "Community Food Board & Map":
                     except Exception as e:
                         st.error(f"Failed to save to database: {e}")
                 else:
-                    st.success(f"Successfully recorded listing for {selected_area}! (Connect Firebase credentials to persist across browser sessions).")
+                    st.success(f"Successfully recorded listing for {selected_area}! (Connect Firebase credentials to persist across sessions).")
             else:
                 st.warning("Please fill out at least the Food Item and Contact details.")
 
     st.divider()
     st.subheader("📍 Live Food Rescue Map (Delhi NCR)")
     
-    # Collect map points from Firestore or show default placeholder pins
     map_points = []
     listings_data = []
     
@@ -149,12 +185,10 @@ elif app_mode == "Community Food Board & Map":
         except Exception as e:
             st.warning("Could not fetch database records for the map.")
             
-    # Fallback default markers if database is empty so map looks populated
     if not map_points:
         map_points = [{"lat": v["lat"], "lon": v["lon"]} for v in DELHI_LOCATIONS.values()]
         st.info("Showing default hub locations. Post your first real-time food rescue listing above to update the map pins!")
     
-    # Display Streamlit Map
     df_map = pd.DataFrame(map_points)
     st.map(df_map, zoom=11)
 
@@ -170,3 +204,56 @@ elif app_mode == "Community Food Board & Map":
                 st.write(f"**Contact:** {data.get('contact', 'N/A')}")
     else:
         st.write("Browse active pickup points from the map above or post a listing to get started.")
+
+# ==========================================
+# PAGE 4: FOOD STORAGE GUIDE
+# ==========================================
+elif page == "4. Food Storage Guide":
+    st.title("🧊 Food Preservation & Storage Guide")
+    st.write("Proper storage is the first line of defense against food waste. Explore these pro-tips to maximize freshness:")
+
+    tab1, tab2, tab3 = st.tabs(["🥬 Vegetables & Fruits", "🍞 Bakery & Grains", "🥩 Dairy & Proteins"])
+
+    with tab1:
+        st.subheader("Produce Preservation Tips")
+        st.markdown("""
+        * **Leafy Greens:** Wrap in a damp paper towel and store in an airtight container to keep them crisp for up to a week.
+        * **Berries:** Wash just before eating, not before storing, to prevent mold growth from excess moisture.
+        * **Root Vegetables:** Store potatoes and onions in a cool, dark, well-ventilated place—never store them together because onions release gases that accelerate sprouting.
+        """)
+
+    with tab2:
+        st.markdown("""
+        ### Breads & Dry Goods
+        * **Bread:** Keep bread at room temperature in a paper bag or bread box. Freezing sliced bread preserves texture much better than refrigeration.
+        * **Rice & Grains:** Store in airtight glass or plastic containers in a cool pantry to keep pests out.
+        """)
+
+    with tab3:
+        st.markdown("""
+        ### Meat, Dairy & Leftovers
+        * **Dairy:** Keep milk and yogurt on interior refrigerator shelves rather than the door, where temperature fluctuates.
+        * **Leftovers:** Consume cooked meals within 3 to 4 days when stored in the fridge, or freeze them immediately for longer storage.
+        """)
+
+# ==========================================
+# PAGE 5: LOCAL NGO DIRECTORY
+# ==========================================
+elif page == "5. Local NGO Directory":
+    st.title("🤝 Local Food Rescue Directory (Delhi NCR)")
+    st.write("Partner with or donate surplus food directly to established organizations operating across Delhi:")
+
+    with st.container(border=True):
+        st.subheader("1. Robin Hood Army (Delhi Chapter)")
+        st.write("**Mission:** A volunteer-based organization that collects surplus food from restaurants and distributes it to less fortunate citizens.")
+        st.write("**Operational Areas:** Pan-Delhi (Connaught Place, South Delhi, Rohini, Dwarka)")
+
+    with st.container(border=True):
+        st.subheader("2. Feeding India (Zomato Feeding India)")
+        st.write("**Mission:** Direct hunger relief initiative focused on routing surplus food from weddings, corporate cafeterias, and restaurants.")
+        st.write("**Operational Areas:** NCR Wide")
+
+    with st.container(border=True):
+        st.subheader("3. Local Community Food Banks & Gurdwaras")
+        st.write("**Mission:** Community-driven langar services providing massive daily meal distributions.")
+        st.write("**Operational Areas:** Major Gurdwaras across Delhi NCR")
