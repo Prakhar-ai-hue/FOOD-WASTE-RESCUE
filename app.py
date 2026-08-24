@@ -15,27 +15,19 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Advanced Custom CSS for Heavy Page Load Animations, Glows, and Image Enhancements
+# Advanced Custom CSS for Heavy Page & Text Animations
 st.markdown("""
 <style>
-    /* Heavy, Noticeable Page Entrance Animation */
+    /* Cinematic Page Entrance Animation */
     .stApp {
-        animation: cinematicFadeIn 0.8s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+        animation: cinematicFadeIn 0.7s cubic-bezier(0.25, 1, 0.5, 1) forwards;
     }
     @keyframes cinematicFadeIn {
-        0% {
-            opacity: 0;
-            transform: translateY(25px) scale(0.98);
-            filter: blur(4px);
-        }
-        100% {
-            opacity: 1;
-            transform: translateY(0) scale(1);
-            filter: blur(0px);
-        }
+        0% { opacity: 0; transform: translateY(15px); filter: blur(3px); }
+        100% { opacity: 1; transform: translateY(0); filter: blur(0px); }
     }
 
-    /* Dramatic Glowing Shimmer Animated Header */
+    /* Dramatic Typing & Shimmer Animation for Headers */
     .animated-header {
         background: linear-gradient(270deg, #1b4d0b, #4caf50, #8bc34a, #2e7d32, #1b4d0b);
         background-size: 400% 400%;
@@ -44,7 +36,7 @@ st.markdown("""
         font-weight: 900;
         font-size: 2.7rem;
         margin-bottom: 0.5rem;
-        animation: textShimmer 5s ease infinite;
+        animation: textShimmer 5s ease infinite, textSlideIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         text-shadow: 0 0 30px rgba(76, 175, 80, 0.2);
     }
     @keyframes textShimmer {
@@ -52,8 +44,24 @@ st.markdown("""
         50% { background-position: 100% 50%; }
         100% { background-position: 0% 50%; }
     }
+    @keyframes textSlideIn {
+        0% { opacity: 0; transform: translateX(-20px); }
+        100% { opacity: 1; transform: translateX(0); }
+    }
 
-    /* Animated Hero Image Frame (Glows & Zooms on Load) */
+    /* Animated Subtitle Fade & Highlight */
+    .animated-subtitle {
+        font-size: 1.2rem;
+        font-weight: 500;
+        color: #2e7d32;
+        animation: subtitleFade 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    @keyframes subtitleFade {
+        0% { opacity: 0; transform: translateY(10px); }
+        100% { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Animated Hero Image Frame */
     .stImage img {
         border-radius: 16px;
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
@@ -175,8 +183,8 @@ page = st.sidebar.radio(
 )
 
 # Force a micro cinematic transition spinner effect when changing pages
-with st.spinner("✨ Loading page experience..."):
-    time.sleep(0.15)
+with st.spinner("✨ Loading animated page experience..."):
+    time.sleep(0.12)
 
 # Dictionary translations
 TRANS = {
@@ -208,7 +216,7 @@ t = TRANS.get(selected_lang, TRANS["English"])
 # ==========================================
 if page == "1. Home & Overview":
     st.markdown(f'<p class="animated-header">{t["title"]}</p>', unsafe_allow_html=True)
-    st.markdown(f"### {t['subtitle']}")
+    st.markdown(f'<p class="animated-subtitle">{t["subtitle"]}</p>', unsafe_allow_html=True)
     
     st.image(
         "https://images.unsplash.com/photo-1593113598332-cd288d649433?auto=format&fit=crop&w=1200&q=80",
@@ -231,7 +239,7 @@ if page == "1. Home & Overview":
 # ==========================================
 elif page == "2. Impact & Analytics Dashboard":
     st.markdown(f'<p class="animated-header">{t["analytics_title"]}</p>', unsafe_allow_html=True)
-    st.write("Detailed statistical breakdown of community food rescue operations, borrower growth, and hub activity.")
+    st.markdown('<p class="animated-subtitle">Detailed statistical breakdown of community food rescue operations, borrower growth, and hub activity.</p>', unsafe_allow_html=True)
     
     st.image(
         "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1200&q=80",
@@ -275,6 +283,7 @@ elif page == "2. Impact & Analytics Dashboard":
 # ==========================================
 elif page == "3. AI Kitchen Assistant":
     st.markdown(f'<p class="animated-header">{t["ai_title"]}</p>', unsafe_allow_html=True)
+    st.markdown('<p class="animated-subtitle">Transform everyday ingredients into sustainable meals with AI.</p>', unsafe_allow_html=True)
     
     st.image(
         "https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&w=1200&q=80",
@@ -305,6 +314,7 @@ elif page == "3. AI Kitchen Assistant":
 # ==========================================
 elif page == "4. Community Food Board & Map":
     st.markdown(f'<p class="animated-header">{t["map_title"]}</p>', unsafe_allow_html=True)
+    st.markdown('<p class="animated-subtitle">Connecting local donors and receivers across Delhi NCR.</p>', unsafe_allow_html=True)
     
     st.image(
         "https://images.unsplash.com/photo-1582510003544-4d00b7f74220?auto=format&fit=crop&w=1200&q=80",
@@ -346,6 +356,7 @@ elif page == "4. Community Food Board & Map":
 # ==========================================
 elif page == "5. Food Delivery & Pickup System":
     st.markdown(f'<p class="animated-header">{t["delivery_title"]}</p>', unsafe_allow_html=True)
+    st.markdown('<p class="animated-subtitle">Volunteer delivery fleet bridging surplus food to shelters.</p>', unsafe_allow_html=True)
     
     st.image(
         "https://images.unsplash.com/photo-1617347454431-f49d7ff5c3b1?auto=format&fit=crop&w=1200&q=80",
@@ -371,6 +382,7 @@ elif page == "5. Food Delivery & Pickup System":
 # ==========================================
 elif page == "6. Food Storage Guide":
     st.markdown(f'<p class="animated-header">{t["storage_title"]}</p>', unsafe_allow_html=True)
+    st.markdown('<p class="animated-subtitle">Professional preservation techniques to extend food shelf-life.</p>', unsafe_allow_html=True)
     
     st.image(
         "https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=1200&q=80",
@@ -398,6 +410,7 @@ elif page == "6. Food Storage Guide":
 # ==========================================
 elif page == "7. Local NGO Directory":
     st.markdown(f'<p class="animated-header">{t["ngo_title"]}</p>', unsafe_allow_html=True)
+    st.markdown('<p class="animated-subtitle">Partnering with community changemakers across the capital region.</p>', unsafe_allow_html=True)
     
     st.image(
         "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&w=1200&q=80",
