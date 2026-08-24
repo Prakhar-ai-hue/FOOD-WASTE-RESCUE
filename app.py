@@ -14,7 +14,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Advanced Custom CSS for Noticeable Animations, Glowing Text, and Styling
+# Advanced Custom CSS for Responsive Scaling & Animations
 st.markdown("""
 <style>
     /* Full Page Entrance Animation */
@@ -33,7 +33,7 @@ st.markdown("""
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         font-weight: 900;
-        font-size: 2.8rem;
+        font-size: 2.5rem;
         animation: gradientPulse 6s ease infinite;
     }
     @keyframes gradientPulse {
@@ -45,37 +45,22 @@ st.markdown("""
     /* Floating Hover Card Effect */
     div.stContainer {
         border-radius: 12px;
-        padding: 18px;
+        padding: 16px;
         background: #ffffff;
         border: 1px solid #e0e0e0;
         box-shadow: 0 4px 12px rgba(0,0,0,0.04);
-        transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+        transition: all 0.3s ease;
     }
     div.stContainer:hover {
-        transform: translateY(-6px);
-        box-shadow: 0 16px 30px rgba(76, 175, 80, 0.2);
+        transform: translateY(-4px);
+        box-shadow: 0 12px 24px rgba(76, 175, 80, 0.15);
         border-color: #4caf50;
     }
 
-    /* Glowing Pulsing Buttons */
-    .stButton>button[kind="primary"] {
-        background: linear-gradient(135deg, #2b580c 0%, #4caf50 100%);
-        color: white;
-        border: none;
-        border-radius: 10px;
-        font-weight: 700;
-        transition: all 0.3s ease;
-        box-shadow: 0 4px 15px rgba(76, 175, 80, 0.4);
-        animation: subtlePulse 2s infinite;
-    }
-    @keyframes subtlePulse {
-        0% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.4); }
-        70% { box-shadow: 0 0 0 10px rgba(76, 175, 80, 0); }
-        100% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0); }
-    }
-    .stButton>button[kind="primary"]:hover {
-        transform: scale(1.04);
-        background: linear-gradient(135deg, #1e3e08, #3b8e3e);
+    /* Responsive adjustments for mobile screens */
+    @media (max-width: 768px) {
+        .animated-header { font-size: 1.8rem; }
+        .stColumns { display: flex; flex-direction: column; }
     }
 </style>
 """, unsafe_allow_html=True)
@@ -122,19 +107,11 @@ DELHI_LOCATIONS = {
 # Sidebar Global Controls & Navigation
 st.sidebar.title("🌍 Global Dashboard")
 
-# Global Prominent Languages Selector
 selected_lang = st.sidebar.selectbox(
     "🌐 Choose Language / भाषा चुनें",
     [
-        "English", 
-        "हिन्दी (Hindi)", 
-        "বাংলা (Bengali)", 
-        "മലയാളം (Malayalam)", 
-        "Español (Spanish)", 
-        "Nederlands (Dutch)", 
-        "Русский (Russian)", 
-        "中文 (Chinese)", 
-        "日本語 (Japanese)"
+        "English", "हिन्दी (Hindi)", "বাংলা (Bengali)", "മലയാളം (Malayalam)", 
+        "Español (Spanish)", "Nederlands (Dutch)", "Русский (Russian)", "中文 (Chinese)", "日本語 (Japanese)"
     ]
 )
 
@@ -145,11 +122,12 @@ page = st.sidebar.radio(
     "Select a Page",
     [
         "1. Home & Overview",
-        "2. AI Kitchen Assistant",
-        "3. Community Food Board & Map",
-        "4. Food Delivery & Pickup System",
-        "5. Food Storage Guide",
-        "6. Local NGO Directory"
+        "2. Impact & Analytics Dashboard",
+        "3. AI Kitchen Assistant",
+        "4. Community Food Board & Map",
+        "5. Food Delivery & Pickup System",
+        "6. Food Storage Guide",
+        "7. Local NGO Directory"
     ]
 )
 
@@ -158,6 +136,7 @@ TRANS = {
     "English": {
         "title": "🥗 Food Waste Rescue Hub",
         "subtitle": "Turning kitchen surplus and food waste into community meals and sustainable solutions globally.",
+        "analytics_title": "📊 Impact & Statistical Analysis",
         "ai_title": "🤖 AI Kitchen & Waste Scanner",
         "map_title": "🗺️ Community Food Board & Live Delhi Map",
         "delivery_title": "🚴 Food Delivery & Volunteer Pickup System",
@@ -167,97 +146,54 @@ TRANS = {
     "हिन्दी (Hindi)": {
         "title": "🥗 खाद्य अपशिष्ट बचाव केंद्र",
         "subtitle": "रसोई के बचे हुए भोजन को सामुदायिक भोजन और टिकाऊ समाधानों में बदलना।",
+        "analytics_title": "📊 प्रभाव और सांख्यिकीय विश्लेषण",
         "ai_title": "🤖 एआई रसोई और अपशिष्ट स्कैनर",
         "map_title": "🗺️ सामुदायिक खाद्य बोर्ड और लाइव दिल्ली मानचित्र",
         "delivery_title": "🚴 खाद्य वितरण और पिकअप प्रणाली",
         "storage_title": "🧊 खाद्य भंडारण मार्गदर्शिका",
         "ngo_title": "🤝 स्थानीय एनजीओ निर्देशिका"
-    },
-    "বাংলা (Bengali)": {
-        "title": "🥗 খাদ্য অপচয় উদ্ধার কেন্দ্র",
-        "subtitle": "রান্নাঘরের উদ্বৃত্ত খাবারকে সম্প্রদায়ের খাবারে রূপান্তর করা।",
-        "ai_title": "🤖 এআই কিচেন অ্যাসিস্ট্যান্ট",
-        "map_title": "🗺️ কমিউনিটি ফুড বোর্ড এবং লাইভ মানচিত্র",
-        "delivery_title": "🚴 ফুড ডেলিভারি ও পিকআপ সিস্টেম",
-        "storage_title": "🧊 খাদ্য সংরক্ষণ গাইড",
-        "ngo_title": "🤝 স্থানীয় এনজিও ডিরেক্টরি"
-    },
-    "മലയാളം (Malayalam)": {
-        "title": "🥗 ഭക്ഷ്യ മാലിന്യ നിർമാർജന കേന്ദ്രം",
-        "subtitle": "അടുക്കളയിലെ മിച്ചഭക്ഷണം കമ്മ്യൂണിറ്റി ഭക്ഷണമാക്കി മാറ്റുന്നു.",
-        "ai_title": "🤖 എഐ അടുക്കള സഹായി",
-        "map_title": "🗺️ കമ്മ്യൂണിറ്റി ഫുഡ് ബോർഡും മാപ്പും",
-        "delivery_title": "🚴 ഫുഡ് ഡെലിവറി സിസ്റ്റം",
-        "storage_title": "🧊 ഭക്ഷണ സംരക്ഷണ ഗൈഡ്",
-        "ngo_title": "🤝 എൻജിഒ ഡയറക്ടറി"
-    },
-    "Español (Spanish)": {
-        "title": "🥗 Centro de Rescate de Residuos de Alimentos",
-        "subtitle": "Convirtiendo excedentes de cocina en comidas comunitarias.",
-        "ai_title": "🤖 Asistente de Cocina IA",
-        "map_title": "🗺️ Tablero de Alimentos y Mapa en Vivo",
-        "delivery_title": "🚴 Sistema de Entrega y Recogida",
-        "storage_title": "🧊 Guía de Almacenamiento",
-        "ngo_title": "🤝 Directorio de ONG Locales"
-    },
-    "Nederlands (Dutch)": {
-        "title": "🥗 Voedselverspilling Reddingshub",
-        "subtitle": "Keukenoverschotten omzetten in maaltijden voor de gemeenschap.",
-        "ai_title": "🤖 AI Keukenassistent",
-        "map_title": "🗺️ Voedselbord & Live Kaart",
-        "delivery_title": "🚴 Voedselbezorging & Ophaalsysteem",
-        "storage_title": "🧊 Voedselbewaringsgids",
-        "ngo_title": "🤝 Lokale NGO Gids"
-    },
-    "Русский (Russian)": {
-        "title": "🥗 Центр спасения пищевых отходов",
-        "subtitle": "Превращение излишков еды в общественные обеды.",
-        "ai_title": "🤖 ИИ Помощник на кухне",
-        "map_title": "🗺️ Доска объявлений и живая карта",
-        "delivery_title": "🚴 Система доставки еды",
-        "storage_title": "🧊 Руководство по хранению",
-        "ngo_title": "🤝 Каталог местных НПО"
-    },
-    "中文 (Chinese)": {
-        "title": "🥗 食物浪费救援中心",
-        "subtitle": "将厨房剩余食物转化为社区餐食与可持续方案。",
-        "ai_title": "🤖 AI 厨房助手与扫描仪",
-        "map_title": "🗺️ 社区食品公告栏与实时地图",
-        "delivery_title": "🚴 食品配送与志愿领取系统",
-        "storage_title": "🧊 食品保鲜与储存指南",
-        "ngo_title": "🤝 本地NGO名录"
-    },
-    "日本語 (Japanese)": {
-        "title": "🥗 食品ロス削減レスキューハブ",
-        "subtitle": "キッチンの余剰食材をコミュニティの食事に変える。",
-        "ai_title": "🤖 AI キッチンアシスタント",
-        "map_title": "🗺️ コミュニティフードボード＆ライブマップ",
-        "delivery_title": "🚴 フードデリバリー＆受取システム",
-        "storage_title": "🧊 食品保存ガイド",
-        "ngo_title": "🤝 ローカルNGOディレクトリ"
     }
 }
-
 t = TRANS.get(selected_lang, TRANS["English"])
 
 # ==========================================
-# PAGE 1: HOME & OVERVIEW WITH ANALYTICS & HERO IMAGE
+# PAGE 1: HOME & OVERVIEW
 # ==========================================
 if page == "1. Home & Overview":
     st.markdown(f'<p class="animated-header">{t["title"]}</p>', unsafe_allow_html=True)
     st.markdown(f"### {t['subtitle']}")
     
-    # Hero Landing Page Image
     st.image(
         "https://images.unsplash.com/photo-1593113598332-cd288d649433?auto=format&fit=crop&w=1200&q=80",
-        caption="Empowering communities by redirecting surplus food to those in need.",
+        caption="Empowering communities by redirecting surplus food safely.",
         use_container_width=True
     )
     
     st.divider()
-    st.markdown("### 📊 Company Impact & Borrower Analytics")
+    st.markdown("""
+    ### 🌟 Core Platform Features:
+    * **📊 Impact Analytics:** Explore real-time graphical metrics on food rescue and active borrowers.
+    * **🤖 AI Kitchen Assistant:** Upload images of leftovers for instant recipes and preservation tips.
+    * **🤝 Community Food Board & Map:** Pin surplus meals and locate real pickup nodes across Delhi NCR.
+    * **🚴 Delivery System:** Coordinate volunteers and track delivery tasks dynamically.
+    * **🧊 Storage Guide & 🤝 NGOs:** Access professional shelf-life data and local shelter directories.
+    """)
+
+# ==========================================
+# PAGE 2: IMPACT & ANALYTICS DASHBOARD (SEPARATE PAGE)
+# ==========================================
+elif page == "2. Impact & Analytics Dashboard":
+    st.markdown(f'<p class="animated-header">{t["analytics_title"]}</p>', unsafe_allow_html=True)
+    st.write("Detailed statistical breakdown of community food rescue operations, borrower growth, and hub activity.")
     
-    # Metrics Row
+    st.image(
+        "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1200&q=80",
+        caption="Data-driven insights into community food security.",
+        use_container_width=True
+    )
+    
+    st.divider()
+    
     col1, col2, col3, col4 = st.columns(4)
     with col1:
         st.metric(label="Total Meals Rescued", value="14,850", delta="+12% this week")
@@ -268,7 +204,7 @@ if page == "1. Home & Overview":
     with col4:
         st.metric(label="Volunteer Deliveries", value="920+", delta="99.4% Success")
 
-    # Graphs Section
+    st.markdown("---")
     chart_col1, chart_col2 = st.columns(2)
     
     with chart_col1:
@@ -280,46 +216,37 @@ if page == "1. Home & Overview":
         st.line_chart(trend_data)
 
     with chart_col2:
-        st.markdown("#### 📊 Surplus Food Collected by Hub (Delhi NCR)")
+        st.markdown("#### 📊 Surplus Food Collected by Hub (Kg)")
         hub_data = pd.DataFrame({
-            "Hub": ["Connaught Place", "South Ext.", "Dwarka", "Lajpat Nagar", "Rohini", "Noida Sec 18", "Gurugram"],
+            "Hub": ["Connaught Pl.", "South Ext.", "Dwarka", "Lajpat Nagar", "Rohini", "Noida 18", "Gurugram"],
             "Kg Rescued": [320, 450, 280, 510, 390, 600, 720]
         }).set_index("Hub")
         st.bar_chart(hub_data, color="#4caf50")
 
-    st.divider()
-    st.markdown("""
-    ### 🌟 Core Platform Features:
-    * **🤖 AI Kitchen Assistant:** Upload images of leftovers for instant recipes & preservation tips.
-    * **🤝 Community Food Board & Map:** Pin surplus meals and locate real pickup nodes across Delhi NCR.
-    * **🚴 Delivery System:** Coordinate volunteers and track delivery tasks dynamically.
-    * **🧊 Storage Guide & 🤝 NGOs:** Access professional shelf-life data and local shelter directories.
-    """)
-
 # ==========================================
-# PAGE 2: AI KITCHEN ASSISTANT
+# PAGE 3: AI KITCHEN ASSISTANT
 # ==========================================
-elif page == "2. AI Kitchen Assistant":
+elif page == "3. AI Kitchen Assistant":
     st.markdown(f'<p class="animated-header">{t["ai_title"]}</p>', unsafe_allow_html=True)
-    st.write("Upload an image of your ingredients to generate zero-waste culinary ideas instantly.")
-
+    
+    st.image(
+        "https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&w=1200&q=80",
+        caption="Transform everyday ingredients into sustainable meals with AI.",
+        use_container_width=True
+    )
+    
     if client is None:
-        st.error("⚠️ Gemini API Key not found. Please add `GEMINI_API_KEY` in your Streamlit Secrets.")
+        st.error("⚠️ Gemini API Key not found in Streamlit Secrets.")
     else:
         uploaded_file = st.file_uploader("Upload ingredient photo...", type=["jpg", "jpeg", "png"])
-        
         if uploaded_file is not None:
             image = PIL.Image.open(uploaded_file)
             st.image(image, caption="Uploaded Ingredients", use_container_width=True)
-            
             if st.button("Generate Sustainable Recipes", type="primary"):
                 with st.spinner("Analyzing with Gemini AI..."):
                     try:
                         prompt = f"Analyze these food items. Provide 2-3 zero-waste recipes and storage tips in {selected_lang}."
-                        response = client.models.generate_content(
-                            model="gemini-3.6-flash",
-                            contents=[image, prompt]
-                        )
+                        response = client.models.generate_content(model="gemini-3.6-flash", contents=[image, prompt])
                         st.success("Analysis Complete!")
                         st.markdown(response.text)
                         st.balloons()
@@ -327,11 +254,16 @@ elif page == "2. AI Kitchen Assistant":
                         st.error(f"Error: {e}")
 
 # ==========================================
-# PAGE 3: COMMUNITY FOOD BOARD & MAP
+# PAGE 4: COMMUNITY FOOD BOARD & MAP
 # ==========================================
-elif page == "3. Community Food Board & Map":
+elif page == "4. Community Food Board & Map":
     st.markdown(f'<p class="animated-header">{t["map_title"]}</p>', unsafe_allow_html=True)
-    st.write("Share surplus food or discover active rescue locations across Delhi NCR.")
+    
+    st.image(
+        "https://images.unsplash.com/photo-1582510003544-4d00b7f74220?auto=format&fit=crop&w=1200&q=80",
+        caption="Connecting local donors and receivers across Delhi NCR.",
+        use_container_width=True
+    )
 
     with st.form("food_listing_form"):
         st.subheader("List Surplus Food for Rescue")
@@ -340,18 +272,12 @@ elif page == "3. Community Food Board & Map":
         selected_area = st.selectbox("Select Delhi NCR Area", list(DELHI_LOCATIONS.keys()))
         contact = st.text_input("Contact Details (Phone / Org Name)")
         
-        submitted = st.form_submit_button("Post Listing & Pin on Map", type="primary")
-
-        if submitted:
+        if st.form_submit_button("Post Listing & Pin on Map", type="primary"):
             if food_item and contact:
                 coords = DELHI_LOCATIONS[selected_area]
                 listing_data = {
-                    "food_item": food_item,
-                    "quantity": quantity,
-                    "location": selected_area,
-                    "contact": contact,
-                    "lat": coords["lat"],
-                    "lon": coords["lon"],
+                    "food_item": food_item, "quantity": quantity, "location": selected_area,
+                    "contact": contact, "lat": coords["lat"], "lon": coords["lon"],
                     "timestamp": firestore.SERVER_TIMESTAMP if db else None
                 }
                 if db:
@@ -365,37 +291,20 @@ elif page == "3. Community Food Board & Map":
 
     st.divider()
     st.subheader("📍 Live Delhi NCR Map")
-    map_points = []
-    listings_data = []
-    if db:
-        try:
-            docs = db.collection("surplus_food").stream()
-            for doc in docs:
-                data = doc.to_dict()
-                if "lat" in data and "lon" in data:
-                    map_points.append({"lat": data["lat"], "lon": data["lon"]})
-                    listings_data.append(data)
-        except:
-            pass
-
-    if not map_points:
-        map_points = [{"lat": v["lat"], "lon": v["lon"]} for v in DELHI_LOCATIONS.values()]
-        st.info("Showing default hub markers.")
-
+    map_points = [{"lat": v["lat"], "lon": v["lon"]} for v in DELHI_LOCATIONS.values()]
     st.map(pd.DataFrame(map_points), zoom=11)
 
-    st.subheader("📋 Active Listings")
-    if db and listings_data:
-        for data in listings_data:
-            with st.container():
-                st.markdown(f"**Item:** {data.get('food_item')} | **Qty:** {data.get('quantity')} | **Hub:** {data.get('location')} | **Contact:** {data.get('contact')}")
-
 # ==========================================
-# PAGE 4: FOOD DELIVERY & PICKUP SYSTEM
+# PAGE 5: FOOD DELIVERY & PICKUP SYSTEM
 # ==========================================
-elif page == "4. Food Delivery & Pickup System":
+elif page == "5. Food Delivery & Pickup System":
     st.markdown(f'<p class="animated-header">{t["delivery_title"]}</p>', unsafe_allow_html=True)
-    st.write("Register as a volunteer and claim open transit delivery queues.")
+    
+    st.image(
+        "https://images.unsplash.com/photo-1617347454431-f49d7ff5c3b1?auto=format&fit=crop&w=1200&q=80",
+        caption="Volunteer delivery fleet bridging surplus food to shelters.",
+        use_container_width=True
+    )
 
     with st.form("volunteer_form"):
         st.subheader("Volunteer Signup")
@@ -410,28 +319,18 @@ elif page == "4. Food Delivery & Pickup System":
             else:
                 st.warning("Please provide name and phone.")
 
-    st.divider()
-    st.subheader("📦 Active Delivery Queue")
-    if db:
-        try:
-            docs = db.collection("surplus_food").stream()
-            for doc in docs:
-                data = doc.to_dict()
-                with st.container():
-                    st.markdown(f"**Item:** {data.get('food_item')} ({data.get('quantity')})")
-                    st.write(f"**Pickup Location:** {data.get('location')}")
-                    if st.button(f"Accept Delivery Task", key=doc.id, type="primary"):
-                        st.success("Delivery task claimed! Safe travels.")
-        except:
-            st.info("No delivery items found.")
-    else:
-        st.info("Connect Firebase to sync active deliveries.")
-
 # ==========================================
-# PAGE 5: FOOD STORAGE GUIDE
+# PAGE 6: FOOD STORAGE GUIDE
 # ==========================================
-elif page == "5. Food Storage Guide":
+elif page == "6. Food Storage Guide":
     st.markdown(f'<p class="animated-header">{t["storage_title"]}</p>', unsafe_allow_html=True)
+    
+    st.image(
+        "https://images.unsplash.com/photo-1584727638782-c98c0d9c1a70?auto=format&fit=crop&w=1200&q=80",
+        caption="Professional preservation techniques to extend food shelf-life.",
+        use_container_width=True
+    )
+
     tab1, tab2, tab3 = st.tabs(["🥬 Produce", "🍞 Bakery", "🥩 Proteins"])
     with tab1:
         st.markdown("* Keep leafy greens wrapped in damp paper towels inside airtight boxes.\n* Store onions and potatoes separately.")
@@ -441,10 +340,17 @@ elif page == "5. Food Storage Guide":
         st.markdown("* Keep dairy products on interior shelves where temperatures remain stable.")
 
 # ==========================================
-# PAGE 6: LOCAL NGO DIRECTORY
+# PAGE 7: LOCAL NGO DIRECTORY
 # ==========================================
-elif page == "6. Local NGO Directory":
+elif page == "7. Local NGO Directory":
     st.markdown(f'<p class="animated-header">{t["ngo_title"]}</p>', unsafe_allow_html=True)
+    
+    st.image(
+        "https://images.unsplash.com/photo-1532629345422-7515f3d16bb9?auto=format&fit=crop&w=1200&q=80",
+        caption="Partnering with community changemakers across the capital region.",
+        use_container_width=True
+    )
+
     with st.container():
         st.subheader("1. Robin Hood Army (Delhi)")
         st.write("Volunteer network recovering surplus food from restaurants and public gatherings.")
