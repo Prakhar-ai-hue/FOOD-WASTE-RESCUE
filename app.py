@@ -14,16 +14,16 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Advanced Custom CSS for Responsive Scaling & Animations
+# Advanced Custom CSS for Modern Glassmorphism, Slide-in Animations, and Styling
 st.markdown("""
 <style>
-    /* Full Page Entrance Animation */
+    /* Smooth Page Slide-in & Fade-in Entry Animation */
     .stApp {
-        animation: fadeInPage 0.8s ease-out;
+        animation: slideInPage 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
-    @keyframes fadeInPage {
-        0% { opacity: 0; transform: scale(0.99); }
-        100% { opacity: 1; transform: scale(1); }
+    @keyframes slideInPage {
+        0% { opacity: 0; transform: translateY(15px); }
+        100% { opacity: 1; transform: translateY(0); }
     }
 
     /* Glowing Shimmer Animated Header */
@@ -33,7 +33,8 @@ st.markdown("""
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         font-weight: 900;
-        font-size: 2.5rem;
+        font-size: 2.6rem;
+        margin-bottom: 0.5rem;
         animation: gradientPulse 6s ease infinite;
     }
     @keyframes gradientPulse {
@@ -42,25 +43,45 @@ st.markdown("""
         100% { background-position: 0% 50%; }
     }
 
-    /* Floating Hover Card Effect */
+    /* Glassmorphic Container Cards with Hover Lift */
     div.stContainer {
-        border-radius: 12px;
-        padding: 16px;
-        background: #ffffff;
-        border: 1px solid #e0e0e0;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.04);
-        transition: all 0.3s ease;
+        border-radius: 16px;
+        padding: 20px;
+        background: rgba(255, 255, 255, 0.85);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(76, 175, 80, 0.2);
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+        transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+        margin-bottom: 1rem;
     }
     div.stContainer:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 12px 24px rgba(76, 175, 80, 0.15);
+        transform: translateY(-6px);
+        box-shadow: 0 16px 40px rgba(76, 175, 80, 0.22);
         border-color: #4caf50;
     }
 
-    /* Responsive adjustments for mobile screens */
-    @media (max-width: 768px) {
-        .animated-header { font-size: 1.8rem; }
-        .stColumns { display: flex; flex-direction: column; }
+    /* Glowing Primary Buttons */
+    .stButton>button[kind="primary"] {
+        background: linear-gradient(135deg, #2b580c 0%, #4caf50 100%);
+        color: white;
+        border: none;
+        border-radius: 12px;
+        font-weight: 700;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(76, 175, 80, 0.4);
+    }
+    .stButton>button[kind="primary"]:hover {
+        transform: scale(1.03);
+        box-shadow: 0 6px 20px rgba(76, 175, 80, 0.6);
+    }
+
+    /* Tabs Styling Decoration */
+    .stTabs [data-baseweb="tab-list"] {
+        gap: 8px;
+    }
+    .stTabs [data-baseweb="tab"] {
+        border-radius: 8px 8px 0px 0px;
+        font-weight: 600;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -180,7 +201,7 @@ if page == "1. Home & Overview":
     """)
 
 # ==========================================
-# PAGE 2: IMPACT & ANALYTICS DASHBOARD (SEPARATE PAGE)
+# PAGE 2: IMPACT & ANALYTICS DASHBOARD
 # ==========================================
 elif page == "2. Impact & Analytics Dashboard":
     st.markdown(f'<p class="animated-header">{t["analytics_title"]}</p>', unsafe_allow_html=True)
@@ -326,18 +347,25 @@ elif page == "6. Food Storage Guide":
     st.markdown(f'<p class="animated-header">{t["storage_title"]}</p>', unsafe_allow_html=True)
     
     st.image(
-        "https://images.unsplash.com/photo-1584727638782-c98c0d9c1a70?auto=format&fit=crop&w=1200&q=80",
+        "https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=1200&q=80",
         caption="Professional preservation techniques to extend food shelf-life.",
         use_container_width=True
     )
 
     tab1, tab2, tab3 = st.tabs(["🥬 Produce", "🍞 Bakery", "🥩 Proteins"])
     with tab1:
-        st.markdown("* Keep leafy greens wrapped in damp paper towels inside airtight boxes.\n* Store onions and potatoes separately.")
+        st.markdown("""
+        * **Leafy Greens:** Wrap in a damp paper towel and store in an airtight container.
+        * **Berries:** Wash just before eating to prevent mold growth.
+        """)
     with tab2:
-        st.markdown("* Freeze sliced bread to preserve texture much longer than refrigeration.")
+        st.markdown("""
+        * **Bread:** Keep at room temperature in a paper bag or freeze slices to preserve texture.
+        """)
     with tab3:
-        st.markdown("* Keep dairy products on interior shelves where temperatures remain stable.")
+        st.markdown("""
+        * **Dairy & Meats:** Keep on interior refrigerator shelves where temperature remains stable.
+        """)
 
 # ==========================================
 # PAGE 7: LOCAL NGO DIRECTORY
@@ -346,7 +374,7 @@ elif page == "7. Local NGO Directory":
     st.markdown(f'<p class="animated-header">{t["ngo_title"]}</p>', unsafe_allow_html=True)
     
     st.image(
-        "https://images.unsplash.com/photo-1532629345422-7515f3d16bb9?auto=format&fit=crop&w=1200&q=80",
+        "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&w=1200&q=80",
         caption="Partnering with community changemakers across the capital region.",
         use_container_width=True
     )
