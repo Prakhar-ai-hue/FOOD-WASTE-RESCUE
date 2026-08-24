@@ -4,6 +4,7 @@ from google import genai
 import firebase_admin
 from firebase_admin import credentials, firestore
 import pandas as pd
+import numpy as np
 
 # Page Configuration
 st.set_page_config(
@@ -13,46 +14,50 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Custom CSS for Animations, Glowing Text, and Responsive Scaling
+# Advanced Custom CSS for Noticeable Animations, Glowing Text, and Styling
 st.markdown("""
 <style>
-    /* Global Page Animation & Fade-in */
+    /* Full Page Entrance Animation */
     .stApp {
-        animation: fadeIn 0.8s ease-in-out;
+        animation: fadeInPage 0.8s ease-out;
     }
-    @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(10px); }
-        to { opacity: 1; transform: translateY(0); }
+    @keyframes fadeInPage {
+        0% { opacity: 0; transform: scale(0.99); }
+        100% { opacity: 1; transform: scale(1); }
     }
 
-    /* Animated Glowing Gradient Header */
+    /* Glowing Shimmer Animated Header */
     .animated-header {
-        background: linear-gradient(45deg, #2b580c, #64bb31, #2b580c);
-        background-size: 200% auto;
+        background: linear-gradient(270deg, #2b580c, #4caf50, #8bc34a, #2b580c);
+        background-size: 400% 400%;
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         font-weight: 900;
         font-size: 2.8rem;
-        animation: shine 4s linear infinite;
+        animation: gradientPulse 6s ease infinite;
     }
-    @keyframes shine {
-        to { background-position: 200% center; }
+    @keyframes gradientPulse {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
     }
 
-    /* Hover Lift Effects on Containers */
+    /* Floating Hover Card Effect */
     div.stContainer {
         border-radius: 12px;
-        padding: 15px;
-        background: white;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        padding: 18px;
+        background: #ffffff;
+        border: 1px solid #e0e0e0;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+        transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
     }
     div.stContainer:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 12px 20px rgba(76, 175, 80, 0.15);
+        transform: translateY(-6px);
+        box-shadow: 0 16px 30px rgba(76, 175, 80, 0.2);
+        border-color: #4caf50;
     }
 
-    /* Styled Glowing Primary Buttons */
+    /* Glowing Pulsing Buttons */
     .stButton>button[kind="primary"] {
         background: linear-gradient(135deg, #2b580c 0%, #4caf50 100%);
         color: white;
@@ -60,16 +65,17 @@ st.markdown("""
         border-radius: 10px;
         font-weight: 700;
         transition: all 0.3s ease;
-        box-shadow: 0 4px 12px rgba(76, 175, 80, 0.35);
+        box-shadow: 0 4px 15px rgba(76, 175, 80, 0.4);
+        animation: subtlePulse 2s infinite;
+    }
+    @keyframes subtlePulse {
+        0% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.4); }
+        70% { box-shadow: 0 0 0 10px rgba(76, 175, 80, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0); }
     }
     .stButton>button[kind="primary"]:hover {
-        transform: scale(1.03);
-        box-shadow: 0 6px 18px rgba(76, 175, 80, 0.55);
-    }
-    
-    /* Responsive Viewport Optimizations */
-    @media (max-width: 768px) {
-        .animated-header { font-size: 2rem; }
+        transform: scale(1.04);
+        background: linear-gradient(135deg, #1e3e08, #3b8e3e);
     }
 </style>
 """, unsafe_allow_html=True)
@@ -132,13 +138,9 @@ selected_lang = st.sidebar.selectbox(
     ]
 )
 
-# View Mode Switcher (Desktop vs Mobile Optimized layout padding)
-view_mode = st.sidebar.radio("📱 Screen Layout View", ["Auto-Adaptive", "Desktop View", "Mobile View Mode"])
-
 st.sidebar.divider()
 st.sidebar.title("🌱 Navigation Menu")
 
-# Core Feature Pages
 page = st.sidebar.radio(
     "Select a Page",
     [
@@ -151,7 +153,7 @@ page = st.sidebar.radio(
     ]
 )
 
-# Dictionary translations for global text elements based on selected language
+# Dictionary translations
 TRANS = {
     "English": {
         "title": "🥗 Food Waste Rescue Hub",
@@ -239,19 +241,51 @@ TRANS = {
 t = TRANS.get(selected_lang, TRANS["English"])
 
 # ==========================================
-# PAGE 1: HOME & OVERVIEW
+# PAGE 1: HOME & OVERVIEW WITH ANALYTICS & HERO IMAGE
 # ==========================================
 if page == "1. Home & Overview":
     st.markdown(f'<p class="animated-header">{t["title"]}</p>', unsafe_allow_html=True)
     st.markdown(f"### {t['subtitle']}")
     
-    col1, col2, col3 = st.columns(3)
+    # Hero Landing Page Image
+    st.image(
+        "https://images.unsplash.com/photo-1593113598332-cd288d649433?auto=format&fit=crop&w=1200&q=80",
+        caption="Empowering communities by redirecting surplus food to those in need.",
+        use_container_width=True
+    )
+    
+    st.divider()
+    st.markdown("### 📊 Company Impact & Borrower Analytics")
+    
+    # Metrics Row
+    col1, col2, col3, col4 = st.columns(4)
     with col1:
-        st.metric(label="Global Food Waste Goal", value="Target 50%", delta="SDG 12.3")
+        st.metric(label="Total Meals Rescued", value="14,850", delta="+12% this week")
     with col2:
-        st.metric(label="Active Delhi Hubs", value=len(DELHI_LOCATIONS), delta="Live")
+        st.metric(label="Active Food Borrowers", value="1,240", delta="+85 today")
     with col3:
-        st.metric(label="AI Integration", value="Gemini 3.6", delta="Instant")
+        st.metric(label="Delhi NCR Hubs", value=len(DELHI_LOCATIONS), delta="Live")
+    with col4:
+        st.metric(label="Volunteer Deliveries", value="920+", delta="99.4% Success")
+
+    # Graphs Section
+    chart_col1, chart_col2 = st.columns(2)
+    
+    with chart_col1:
+        st.markdown("#### 📈 Monthly Food Borrowing Trends")
+        trend_data = pd.DataFrame({
+            "Month": ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug"],
+            "Meals Borrowed": [420, 680, 950, 1100, 1450, 1800, 2100, 2600]
+        }).set_index("Month")
+        st.line_chart(trend_data)
+
+    with chart_col2:
+        st.markdown("#### 📊 Surplus Food Collected by Hub (Delhi NCR)")
+        hub_data = pd.DataFrame({
+            "Hub": ["Connaught Place", "South Ext.", "Dwarka", "Lajpat Nagar", "Rohini", "Noida Sec 18", "Gurugram"],
+            "Kg Rescued": [320, 450, 280, 510, 390, 600, 720]
+        }).set_index("Hub")
+        st.bar_chart(hub_data, color="#4caf50")
 
     st.divider()
     st.markdown("""
