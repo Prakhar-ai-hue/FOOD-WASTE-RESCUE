@@ -5,6 +5,7 @@ import firebase_admin
 from firebase_admin import credentials, firestore
 import pandas as pd
 import numpy as np
+import time
 
 # Page Configuration
 st.set_page_config(
@@ -14,55 +15,85 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Advanced Custom CSS for Modern Glassmorphism, Slide-in Animations, and Styling
+# Advanced Custom CSS for Heavy Page Load Animations, Glows, and Image Enhancements
 st.markdown("""
 <style>
-    /* Smooth Page Slide-in & Fade-in Entry Animation */
+    /* Heavy, Noticeable Page Entrance Animation */
     .stApp {
-        animation: slideInPage 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        animation: cinematicFadeIn 0.8s cubic-bezier(0.25, 1, 0.5, 1) forwards;
     }
-    @keyframes slideInPage {
-        0% { opacity: 0; transform: translateY(15px); }
-        100% { opacity: 1; transform: translateY(0); }
+    @keyframes cinematicFadeIn {
+        0% {
+            opacity: 0;
+            transform: translateY(25px) scale(0.98);
+            filter: blur(4px);
+        }
+        100% {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            filter: blur(0px);
+        }
     }
 
-    /* Glowing Shimmer Animated Header */
+    /* Dramatic Glowing Shimmer Animated Header */
     .animated-header {
-        background: linear-gradient(270deg, #2b580c, #4caf50, #8bc34a, #2b580c);
+        background: linear-gradient(270deg, #1b4d0b, #4caf50, #8bc34a, #2e7d32, #1b4d0b);
         background-size: 400% 400%;
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         font-weight: 900;
-        font-size: 2.6rem;
+        font-size: 2.7rem;
         margin-bottom: 0.5rem;
-        animation: gradientPulse 6s ease infinite;
+        animation: textShimmer 5s ease infinite;
+        text-shadow: 0 0 30px rgba(76, 175, 80, 0.2);
     }
-    @keyframes gradientPulse {
+    @keyframes textShimmer {
         0% { background-position: 0% 50%; }
         50% { background-position: 100% 50%; }
         100% { background-position: 0% 50%; }
     }
 
-    /* Glassmorphic Container Cards with Hover Lift */
+    /* Animated Hero Image Frame (Glows & Zooms on Load) */
+    .stImage img {
+        border-radius: 16px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        transition: transform 0.5s ease, box-shadow 0.5s ease;
+        animation: imagePopup 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    @keyframes imagePopup {
+        0% { opacity: 0; transform: scale(0.95); }
+        100% { opacity: 1; transform: scale(1); }
+    }
+    .stImage img:hover {
+        transform: scale(1.01);
+        box-shadow: 0 15px 40px rgba(76, 175, 80, 0.3);
+    }
+
+    /* Glassmorphic Container Cards with Glowing Borders */
     div.stContainer {
         border-radius: 16px;
         padding: 20px;
-        background: rgba(255, 255, 255, 0.85);
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(76, 175, 80, 0.2);
-        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+        background: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(76, 175, 80, 0.3);
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.08);
         transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
         margin-bottom: 1rem;
+        animation: cardFadeUp 0.7s ease forwards;
+    }
+    @keyframes cardFadeUp {
+        0% { opacity: 0; transform: translateY(20px); }
+        100% { opacity: 1; transform: translateY(0); }
     }
     div.stContainer:hover {
-        transform: translateY(-6px);
-        box-shadow: 0 16px 40px rgba(76, 175, 80, 0.22);
+        transform: translateY(-5px);
+        box-shadow: 0 16px 45px rgba(76, 175, 80, 0.25);
         border-color: #4caf50;
     }
 
-    /* Glowing Primary Buttons */
+    /* Glowing Primary Action Buttons */
     .stButton>button[kind="primary"] {
-        background: linear-gradient(135deg, #2b580c 0%, #4caf50 100%);
+        background: linear-gradient(135deg, #1b4d0b 0%, #4caf50 100%);
         color: white;
         border: none;
         border-radius: 12px;
@@ -71,17 +102,8 @@ st.markdown("""
         box-shadow: 0 4px 15px rgba(76, 175, 80, 0.4);
     }
     .stButton>button[kind="primary"]:hover {
-        transform: scale(1.03);
-        box-shadow: 0 6px 20px rgba(76, 175, 80, 0.6);
-    }
-
-    /* Tabs Styling Decoration */
-    .stTabs [data-baseweb="tab-list"] {
-        gap: 8px;
-    }
-    .stTabs [data-baseweb="tab"] {
-        border-radius: 8px 8px 0px 0px;
-        font-weight: 600;
+        transform: scale(1.04);
+        box-shadow: 0 6px 22px rgba(76, 175, 80, 0.6);
     }
 </style>
 """, unsafe_allow_html=True)
@@ -151,6 +173,10 @@ page = st.sidebar.radio(
         "7. Local NGO Directory"
     ]
 )
+
+# Force a micro cinematic transition spinner effect when changing pages
+with st.spinner("✨ Loading page experience..."):
+    time.sleep(0.15)
 
 # Dictionary translations
 TRANS = {
