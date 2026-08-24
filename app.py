@@ -169,52 +169,197 @@ selected_lang = st.sidebar.selectbox(
 st.sidebar.divider()
 st.sidebar.title("🌱 Navigation Menu")
 
-page = st.sidebar.radio(
-    "Select a Page",
-    [
-        "1. Home & Overview",
-        "2. Impact & Analytics Dashboard",
-        "3. AI Kitchen Assistant",
-        "4. Community Food Board & Map",
-        "5. Food Delivery & Pickup System",
-        "6. Food Storage Guide",
-        "7. Local NGO Directory"
-    ]
-)
+# Navigation items translated dictionary
+NAV_LABELS = {
+    "English": ["1. Home & Overview", "2. Impact & Analytics Dashboard", "3. AI Kitchen Assistant", "4. Community Food Board & Map", "5. Food Delivery & Pickup System", "6. Food Storage Guide", "7. Local NGO Directory"],
+    "हिन्दी (Hindi)": ["1. होम और अवलोकन", "2. प्रभाव और विश्लेषण डैशबोर्ड", "3. एआई रसोई सहायक", "4. सामुदायिक खाद्य बोर्ड और मानचित्र", "5. खाद्य वितरण और पिकअप प्रणाली", "6. खाद्य भंडारण मार्गदर्शिका", "7. स्थानीय एनजीओ निर्देशिका"],
+    "বাংলা (Bengali)": ["১. হোম ও ওভারভিউ", "২. ইমপ্যাক্ট ও অ্যানালিটিক্স", "৩. এআই কিচেন অ্যাসিস্ট্যান্ট", "৪. কমিউনিটি ফুড বোর্ড ও ম্যাপ", "৫. ফুড ডেলিভারি সিস্টেম", "৬. ফুড স্টোরেজ গাইড", "৭. লোকাল এনজিও ডিরেক্টরি"],
+    "മലയാളം (Malayalam)": ["1. ഹോം & അവലോകനം", "2. ഇംപാക്ട് & അനലിറ്റിക്സ്", "3. എഐ അടുക്കള സഹായി", "4. കമ്മ്യൂണിറ്റി ഫുഡ് ബോർഡ്", "5. ഫുഡ് ഡെലിവറി സിസ്റ്റം", "6. ഭക്ഷണ സംരക്ഷണ ഗൈഡ്", "7. എൻജിഒ ഡയറക്ടറി"],
+    "Español (Spanish)": ["1. Inicio", "2. Panel de Análisis", "3. Asistente IA", "4. Tablero Comunitario", "5. Sistema de Entrega", "6. Guía de Almacenamiento", "7. Directorio ONG"],
+    "Nederlands (Dutch)": ["1. Home", "2. Analyse Dashboard", "3. AI Keukenassistent", "4. Voedselbord & Kaart", "5. Bezorgsysteem", "6. Bewaringsgids", "7. NGO Gids"],
+    "Русский (Russian)": ["1. Главная", "2. Панель аналитики", "3. ИИ Помощник", "4. Общественная доска", "5. Система доставки", "6. Руководство по хранению", "7. Каталог НПО"],
+    "中文 (Chinese)": ["1. 首页与概览", "2. 影响与分析面板", "3. AI 厨房助手", "4. 社区食品板与地图", "5. 食品配送系统", "6. 食品储存指南", "7. 本地NGO名录"],
+    "日本語 (Japanese)": ["1. ホーム＆概要", "2. インパクト分析", "3. AIキッチンアシスタント", "4. コミュニティフードボード", "5. デリバリーシステム", "6. 食品保存ガイド", "7. NGOディレクトリ"]
+}
+
+current_nav_options = NAV_LABELS.get(selected_lang, NAV_LABELS["English"])
+selected_nav_label = st.sidebar.radio("Select a Page", current_nav_options)
+
+# Map back chosen label to english index key
+page_index = current_nav_options.index(selected_nav_label)
+page_keys = [
+    "Home & Overview", "Impact & Analytics Dashboard", "AI Kitchen Assistant", 
+    "Community Food Board & Map", "Food Delivery & Pickup System", "Food Storage Guide", "Local NGO Directory"
+]
+page = page_keys[page_index]
 
 # Force a micro cinematic transition spinner effect when changing pages
 with st.spinner("✨ Loading animated page experience..."):
     time.sleep(0.12)
 
-# Dictionary translations
+# Comprehensive Multi-Language Content Dictionaries
 TRANS = {
     "English": {
         "title": "🥗 Food Waste Rescue Hub",
         "subtitle": "Turning kitchen surplus and food waste into community meals and sustainable solutions globally.",
         "analytics_title": "📊 Impact & Statistical Analysis",
+        "analytics_sub": "Detailed statistical breakdown of community food rescue operations, borrower growth, and hub activity.",
         "ai_title": "🤖 AI Kitchen & Waste Scanner",
+        "ai_sub": "Transform everyday ingredients into sustainable meals with AI.",
         "map_title": "🗺️ Community Food Board & Live Delhi Map",
+        "map_sub": "Connecting local donors and receivers across Delhi NCR.",
         "delivery_title": "🚴 Food Delivery & Volunteer Pickup System",
+        "delivery_sub": "Volunteer delivery fleet bridging surplus food to shelters.",
         "storage_title": "🧊 Food Preservation & Storage Guide",
-        "ngo_title": "🤝 Local Food Rescue Directory (Delhi NCR)"
+        "storage_sub": "Professional preservation techniques to extend food shelf-life.",
+        "ngo_title": "🤝 Local Food Rescue Directory (Delhi NCR)",
+        "ngo_sub": "Partnering with community changemakers across the capital region.",
+        "features": "### 🌟 Core Platform Features:\n* **📊 Impact Analytics:** Explore real-time graphical metrics on food rescue and active borrowers.\n* **🤖 AI Kitchen Assistant:** Upload images of leftovers for instant recipes and preservation tips.\n* **🤝 Community Food Board & Map:** Pin surplus meals and locate real pickup nodes across Delhi NCR.\n* **🚴 Delivery System:** Coordinate volunteers and track delivery tasks dynamically.\n* **🧊 Storage Guide & 🤝 NGOs:** Access professional shelf-life data and local shelter directories."
     },
     "हिन्दी (Hindi)": {
         "title": "🥗 खाद्य अपशिष्ट बचाव केंद्र",
         "subtitle": "रसोई के बचे हुए भोजन को सामुदायिक भोजन और टिकाऊ समाधानों में बदलना।",
         "analytics_title": "📊 प्रभाव और सांख्यिकीय विश्लेषण",
+        "analytics_sub": "सामुदायिक खाद्य बचाव कार्यों, उधारकर्ता की वृद्धि और हब गतिविधियों का विस्तृत सांख्यिकीय विवरण।",
         "ai_title": "🤖 एआई रसोई और अपशिष्ट स्कैनर",
+        "ai_sub": "एआई के साथ रोजमर्रा की सामग्री को टिकाऊ भोजन में बदलें।",
         "map_title": "🗺️ सामुदायिक खाद्य बोर्ड और लाइव दिल्ली मानचित्र",
+        "map_sub": "दिल्ली एनसीआर में स्थानीय दाताओं और प्राप्तकर्ताओं को जोड़ना।",
         "delivery_title": "🚴 खाद्य वितरण और पिकअप प्रणाली",
+        "delivery_sub": "स्वयंसेवक डिलीवरी बेड़ा जो अधिशेष भोजन को आश्रयों तक पहुँचाता है।",
         "storage_title": "🧊 खाद्य भंडारण मार्गदर्शिका",
-        "ngo_title": "🤝 स्थानीय एनजीओ निर्देशिका"
+        "storage_sub": "भोजन की शेल्फ-लाइफ बढ़ाने के लिए पेशेवर संरक्षण तकनीकें।",
+        "ngo_title": "🤝 स्थानीय एनजीओ निर्देशिका",
+        "ngo_sub": "पूंजी क्षेत्र में सामुदायिक परिवर्तन निर्माताओं के साथ साझेदारी।",
+        "features": "### 🌟 मुख्य प्लेटफ़ॉर्म सुविधाएँ:\n* **📊 प्रभाव विश्लेषण:** खाद्य बचाव और सक्रिय उधारकर्ताओं पर रीयल-टाइम ग्राफिक मेट्रिक्स का अन्वेषण करें।\n* **🤖 एआई रसोई सहायक:** तत्काल व्यंजनों और संरक्षण युक्तियों के लिए बचे हुए भोजन की तस्वीरें अपलोड करें।\n* **🤝 सामुदायिक खाद्य बोर्ड और मानचित्र:** अतिरिक्त भोजन पिन करें और दिल्ली एनसीआर में पिकअप नोड खोजें।\n* **🚴 वितरण प्रणाली:** स्वयंसेवकों का समन्वय करें और डिलीवरी कार्यों को गतिशील रूप से ट्रैक करें।\n* **🧊 भंडारण गाइड और 🤝 एनजीओ:** पेशेवर शेल्फ-लाइफ डेटा और स्थानीय आश्रय निर्देशिकाओं तक पहुँचें।"
+    },
+    "বাংলা (Bengali)": {
+        "title": "🥗 খাদ্য অপচয় উদ্ধার কেন্দ্র",
+        "subtitle": "রান্নাঘরের উদ্বৃত্ত খাবারকে সম্প্রদায়ের খাবারে রূপান্তর করা।",
+        "analytics_title": "📊 প্রভাব ও পরিসংখ্যানগত বিশ্লেষণ",
+        "analytics_sub": "সম্প্রদায়ের খাদ্য উদ্ধার কার্যক্রম, ঋণগ্রহীতার বৃদ্ধি এবং হাব কার্যকলাপের বিস্তারিত বিশ্লেষণ।",
+        "ai_title": "🤖 এআই কিচেন অ্যাসিস্ট্যান্ট",
+        "ai_sub": "এআই দিয়ে উদ্বৃত্ত উপাদানকে টেকসই খাবারে রূপান্তর করুন।",
+        "map_title": "🗺️ কমিউনিটি ফুড বোর্ড এবং লাইভ মানচিত্র",
+        "map_sub": "দিল্লী এনসিআর জুড়ে স্থানীয় দাতা এবং গ্রাহকদের সংযোগ করা।",
+        "delivery_title": "🚴 ফুড ডেলিভারি ও পিকআপ সিস্টেম",
+        "delivery_sub": "স্বেচ্ছাসেবক ডেলিভারি দল যারা অতিরিক্ত খাবার শেল্টারে পৌঁছে দেয়।",
+        "storage_title": "🧊 খাদ্য সংরক্ষণ গাইড",
+        "storage_sub": "খাবারের আয়ু বাড়ানোর পেশাদার সংরক্ষণ কৌশল।",
+        "ngo_title": "🤝 স্থানীয় এনজিও ডিরেক্টরি",
+        "ngo_sub": "রাজধানী অঞ্চলের কমিউনিটি পরিবর্তনকারীদের সাথে অংশীদারিত্ব।",
+        "features": "### 🌟 মূল প্ল্যাটফর্ম বৈশিষ্ট্য:\n* **📊 ইমপ্যাক্ট অ্যানালিটিক্স:** রিয়েল-টাইম মেট্রিক্সে খাদ্য উদ্ধার দেখুন।\n* **🤖 এআই কিচেন অ্যাসিস্ট্যান্ট:** তাৎক্ষণিক রান্নার রেসিপির ছবি আপলোড করুন।"
+    },
+    "മലയാളം (Malayalam)": {
+        "title": "🥗 ഭക്ഷ്യ മാലിന്യ നിർമാർജന കേന്ദ്രം",
+        "subtitle": "അടുക്കളയിലെ മിച്ചഭക്ഷണം കമ്മ്യൂണിറ്റി ഭക്ഷണമാക്കി മാറ്റുന്നു.",
+        "analytics_title": "📊 ഇംപാക്ട് & സ്റ്റാറ്റിസ്റ്റിക്കൽ അനാലിസിസ്",
+        "analytics_sub": "കമ്മ്യൂണിറ്റി ഫുഡ് റെസ്ക്യൂ പ്രവർത്തനങ്ങളുടെ വിശദമായ ഡാറ്റ.",
+        "ai_title": "🤖 എഐ അടുക്കള സഹായി",
+        "ai_sub": "എഐ ഉപയോഗിച്ച് സുസ്ഥിരമായ പാചകക്കുറിപ്പുകൾ ഉണ്ടാക്കുക.",
+        "map_title": "🗺️ കമ്മ്യൂണിറ്റി ഫുഡ് ബോർഡും മാപ്പും",
+        "map_sub": "ഡൽഹി NCR-ൽ ഉടനീളമുള്ള ദാതാക്കളെയും സ്വീകർത്താക്കളെയും ബന്ധിപ്പിക്കുന്നു.",
+        "delivery_title": "🚴 ഫുഡ് ഡെലിവറി സിസ്റ്റം",
+        "delivery_sub": "സന്നദ്ധ പ്രവർത്തകരുടെ ഡെലിവറി ശൃംഖല.",
+        "storage_title": "🧊 ഭക്ഷണ സംരക്ഷണ ഗൈഡ്",
+        "storage_sub": "ഭക്ഷ്യക്ഷാമം പരിഹരിക്കാനുള്ള സാങ്കേതിക വിദ്യകൾ.",
+        "ngo_title": "🤝 എൻജിഒ ഡയറക്ടറി",
+        "ngo_sub": "പ്രാദേശിക സംഘടനകളുടെ വിവരങ്ങൾ.",
+        "features": "### 🌟 പ്രധാന സവിശേഷതകൾ:\n* **📊 ഇംപാക്ട് അനലിറ്റിക്സ്:** തത്സമയ ഡാറ്റ പരിശോധിക്കുക."
+    },
+    "Español (Spanish)": {
+        "title": "🥗 Centro de Rescate de Residuos de Alimentos",
+        "subtitle": "Convirtiendo excedentes de cocina en comidas comunitarias.",
+        "analytics_title": "📊 Análisis de Impacto y Estadísticas",
+        "analytics_sub": "Desglose estadístico detallado de las operaciones de rescate de alimentos.",
+        "ai_title": "🤖 Asistente de Cocina IA",
+        "ai_sub": "Transforma ingredientes cotidianos en comidas sostenibles con IA.",
+        "map_title": "🗺️ Tablero de Alimentos y Mapa en Vivo",
+        "map_sub": "Conectando donantes y receptores locales en Delhi NCR.",
+        "delivery_title": "🚴 Sistema de Entrega y Recogida",
+        "delivery_sub": "Flota de entrega voluntaria que lleva alimentos excedentes a refugios.",
+        "storage_title": "🧊 Guía de Almacenamiento",
+        "storage_sub": "Técnicas de preservación profesional para extender la vida útil.",
+        "ngo_title": "🤝 Directorio de ONG Locales",
+        "ngo_sub": "Asociación con agentes de cambio comunitarios en la región.",
+        "features": "### 🌟 Características Principales:\n* **📊 Análisis de Impacto:** Explore métricas en tiempo real."
+    },
+    "Nederlands (Dutch)": {
+        "title": "🥗 Voedselverspilling Reddingshub",
+        "subtitle": "Keukenoverschotten omzetten in maaltijden voor de gemeenschap.",
+        "analytics_title": "📊 Impact & Statistische Analyse",
+        "analytics_sub": "Gedetailleerd overzicht van voedselreddingsoperaties.",
+        "ai_title": "🤖 AI Keukenassistent",
+        "ai_sub": "Zet dagelijkse ingrediënten om in duurzame maaltijden met AI.",
+        "map_title": "🗺️ Voedselbord & Live Kaart",
+        "map_sub": "Verbinding maken tussen lokale donateurs en ontvangers.",
+        "delivery_title": "🚴 Voedselbezorging & Ophaalsysteem",
+        "delivery_sub": "Vrijwilligersvloot die overschotten naar opvangcentra brengt.",
+        "storage_title": "🧊 Voedselbewaringsgids",
+        "storage_sub": "Professionele conserveringstechnieken.",
+        "ngo_title": "🤝 Lokale NGO Gids",
+        "ngo_sub": "Samenwerken met lokale changemakers.",
+        "features": "### 🌟 Belangrijkste Kenmerken:\n* **📊 Impactanalyse:** Bekijk realtime statistieken."
+    },
+    "Русский (Russian)": {
+        "title": "🥗 Центр спасения пищевых отходов",
+        "subtitle": "Превращение излишков еды в общественные обеды.",
+        "analytics_title": "📊 Анализ влияния и статистика",
+        "analytics_sub": "Подробная статистика операций по спасению продуктов питания.",
+        "ai_title": "🤖 ИИ Помощник на кухне",
+        "ai_sub": "Превращайте повседневные ингредиенты в экологичные блюда.",
+        "map_title": "🗺️ Доска объявлений и живая карта",
+        "map_sub": "Связь местных доноров и получателей.",
+        "delivery_title": "🚴 Система доставки еды",
+        "delivery_sub": "Волонтерский парк доставки.",
+        "storage_title": "🧊 Руководство по хранению",
+        "storage_sub": "Профессиональные методы консервации.",
+        "ngo_title": "🤝 Каталог местных НПО",
+        "ngo_sub": "Партнерство с общественными деятелями.",
+        "features": "### 🌟 Основные характеристики:\n* **📊 Аналитика:** Исследуйте графические метрики."
+    },
+    "中文 (Chinese)": {
+        "title": "🥗 食物浪费救援中心",
+        "subtitle": "将厨房剩余食物转化为社区餐食与可持续方案。",
+        "analytics_title": "📊 影响与统计分析",
+        "analytics_sub": "社区食品救援运营、借款人生长和中心活动的详细统计分解。",
+        "ai_title": "🤖 AI 厨房助手与扫描仪",
+        "ai_sub": "利用 AI 将日常食材转化为可持续餐食。",
+        "map_title": "🗺️ 社区食品公告栏与实时地图",
+        "map_sub": "连接德里 NCR 的当地捐赠者和接收者。",
+        "delivery_title": "🚴 食品配送与志愿领取系统",
+        "delivery_sub": "将盈余食品运送至庇护所的志愿者配送车队。",
+        "storage_title": "🧊 食品保鲜与储存指南",
+        "storage_sub": "延长食品保质期的专业保鲜技术。",
+        "ngo_title": "🤝 本地NGO名录",
+        "ngo_sub": "与首都地区的社区变革者合作。",
+        "features": "### 🌟 核心平台功能：\n* **📊 影响分析：** 探索有关食品救援的实时图形指标。\n* **🤖 AI 厨房助手：** 上传剩菜图片以获取即时食谱。\n* **🤝 社区食品看板：** 标记多余的餐食并在地图上查找节点。"
+    },
+    "日本語 (Japanese)": {
+        "title": "🥗 食品ロス削減レスキューハブ",
+        "subtitle": "キッチンの余剰食材をコミュニティの食事に変える。",
+        "analytics_title": "📊 インパクトと統計分析",
+        "analytics_sub": "コミュニティフードレスキュー活動の詳細な統計分析。",
+        "ai_title": "🤖 AI キッチンアシスタント",
+        "ai_sub": "AIを使用して日常の食材を持続可能な食事に変えましょう。",
+        "map_title": "🗺️ コミュニティフードボード＆ライブマップ",
+        "map_sub": "デリーNCR全体の寄付者と受信者を結び付けます。",
+        "delivery_title": "🚴 フードデリバリー＆受取システム",
+        "delivery_sub": "シェルターに余剰食品を届けるボランティア配送チーム。",
+        "storage_title": "🧊 食品保存ガイド",
+        "storage_sub": "賞味期限を延ばすためのプロの保存技術。",
+        "ngo_title": "🤝 ローカルNGOディレクトリ",
+        "ngo_sub": "首都地域のコミュニティ変革者との提携。",
+        "features": "### 🌟 プラットフォームの主な機能：\n* **📊 インパクト分析：** 食品レスキューのリアルタイム指標を確認します。"
     }
 }
+
 t = TRANS.get(selected_lang, TRANS["English"])
 
 # ==========================================
 # PAGE 1: HOME & OVERVIEW
 # ==========================================
-if page == "1. Home & Overview":
+if page == "Home & Overview":
     st.markdown(f'<p class="animated-header">{t["title"]}</p>', unsafe_allow_html=True)
     st.markdown(f'<p class="animated-subtitle">{t["subtitle"]}</p>', unsafe_allow_html=True)
     
@@ -225,21 +370,14 @@ if page == "1. Home & Overview":
     )
     
     st.divider()
-    st.markdown("""
-    ### 🌟 Core Platform Features:
-    * **📊 Impact Analytics:** Explore real-time graphical metrics on food rescue and active borrowers.
-    * **🤖 AI Kitchen Assistant:** Upload images of leftovers for instant recipes and preservation tips.
-    * **🤝 Community Food Board & Map:** Pin surplus meals and locate real pickup nodes across Delhi NCR.
-    * **🚴 Delivery System:** Coordinate volunteers and track delivery tasks dynamically.
-    * **🧊 Storage Guide & 🤝 NGOs:** Access professional shelf-life data and local shelter directories.
-    """)
+    st.markdown(t["features"])
 
 # ==========================================
 # PAGE 2: IMPACT & ANALYTICS DASHBOARD
 # ==========================================
-elif page == "2. Impact & Analytics Dashboard":
+elif page == "Impact & Analytics Dashboard":
     st.markdown(f'<p class="animated-header">{t["analytics_title"]}</p>', unsafe_allow_html=True)
-    st.markdown('<p class="animated-subtitle">Detailed statistical breakdown of community food rescue operations, borrower growth, and hub activity.</p>', unsafe_allow_html=True)
+    st.markdown(f'<p class="animated-subtitle">{t["analytics_sub"]}</p>', unsafe_allow_html=True)
     
     st.image(
         "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1200&q=80",
@@ -281,9 +419,9 @@ elif page == "2. Impact & Analytics Dashboard":
 # ==========================================
 # PAGE 3: AI KITCHEN ASSISTANT
 # ==========================================
-elif page == "3. AI Kitchen Assistant":
+elif page == "AI Kitchen Assistant":
     st.markdown(f'<p class="animated-header">{t["ai_title"]}</p>', unsafe_allow_html=True)
-    st.markdown('<p class="animated-subtitle">Transform everyday ingredients into sustainable meals with AI.</p>', unsafe_allow_html=True)
+    st.markdown(f'<p class="animated-subtitle">{t["ai_sub"]}</p>', unsafe_allow_html=True)
     
     st.image(
         "https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&w=1200&q=80",
@@ -312,9 +450,9 @@ elif page == "3. AI Kitchen Assistant":
 # ==========================================
 # PAGE 4: COMMUNITY FOOD BOARD & MAP
 # ==========================================
-elif page == "4. Community Food Board & Map":
+elif page == "Community Food Board & Map":
     st.markdown(f'<p class="animated-header">{t["map_title"]}</p>', unsafe_allow_html=True)
-    st.markdown('<p class="animated-subtitle">Connecting local donors and receivers across Delhi NCR.</p>', unsafe_allow_html=True)
+    st.markdown(f'<p class="animated-subtitle">{t["map_sub"]}</p>', unsafe_allow_html=True)
     
     st.image(
         "https://images.unsplash.com/photo-1582510003544-4d00b7f74220?auto=format&fit=crop&w=1200&q=80",
@@ -354,9 +492,9 @@ elif page == "4. Community Food Board & Map":
 # ==========================================
 # PAGE 5: FOOD DELIVERY & PICKUP SYSTEM
 # ==========================================
-elif page == "5. Food Delivery & Pickup System":
+elif page == "Food Delivery & Pickup System":
     st.markdown(f'<p class="animated-header">{t["delivery_title"]}</p>', unsafe_allow_html=True)
-    st.markdown('<p class="animated-subtitle">Volunteer delivery fleet bridging surplus food to shelters.</p>', unsafe_allow_html=True)
+    st.markdown(f'<p class="animated-subtitle">{t["delivery_sub"]}</p>', unsafe_allow_html=True)
     
     st.image(
         "https://images.unsplash.com/photo-1617347454431-f49d7ff5c3b1?auto=format&fit=crop&w=1200&q=80",
@@ -380,9 +518,9 @@ elif page == "5. Food Delivery & Pickup System":
 # ==========================================
 # PAGE 6: FOOD STORAGE GUIDE
 # ==========================================
-elif page == "6. Food Storage Guide":
+elif page == "Food Storage Guide":
     st.markdown(f'<p class="animated-header">{t["storage_title"]}</p>', unsafe_allow_html=True)
-    st.markdown('<p class="animated-subtitle">Professional preservation techniques to extend food shelf-life.</p>', unsafe_allow_html=True)
+    st.markdown(f'<p class="animated-subtitle">{t["storage_sub"]}</p>', unsafe_allow_html=True)
     
     st.image(
         "https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=1200&q=80",
@@ -408,9 +546,9 @@ elif page == "6. Food Storage Guide":
 # ==========================================
 # PAGE 7: LOCAL NGO DIRECTORY
 # ==========================================
-elif page == "7. Local NGO Directory":
+elif page == "Local NGO Directory":
     st.markdown(f'<p class="animated-header">{t["ngo_title"]}</p>', unsafe_allow_html=True)
-    st.markdown('<p class="animated-subtitle">Partnering with community changemakers across the capital region.</p>', unsafe_allow_html=True)
+    st.markdown(f'<p class="animated-subtitle">{t["ngo_sub"]}</p>', unsafe_allow_html=True)
     
     st.image(
         "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&w=1200&q=80",
