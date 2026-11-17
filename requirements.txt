@@ -1,4 +1,6 @@
 streamlit
 google-genai
 firebase-admin
-pillow
+folium
+streamlit-folium
+geopy
